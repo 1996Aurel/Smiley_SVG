@@ -12,10 +12,10 @@ class Cond_Variational_Encoder(nn.Module):
         super(Cond_Variational_Encoder, self).__init__()
         self.linear1 = nn.Linear(11, 20)  # NB : the input size here is 11 and not 10 as we add the label y 
         self.linear2 = nn.Linear(20, 40)
-        self.linear3 = nn.Linear(40,80)
-        self.linear4 = nn.Linear(80,40)
-        self.linear5 = nn.Linear(40,20)
-        self.linear6 = nn.Linear(20,5)
+        self.linear3 = nn.Linear(40, 80)
+        self.linear4 = nn.Linear(80, 40)
+        self.linear5 = nn.Linear(40, 20)
+        self.linear6 = nn.Linear(20, 5)
         self.linear7 = nn.Linear(5, latent_dims)
         self.linear8 = nn.Linear(5, latent_dims)
         
@@ -25,8 +25,8 @@ class Cond_Variational_Encoder(nn.Module):
 
     def forward(self, x, y):
         length = y.size(0)
-        y = y.view(length,1)
-        x = torch.cat((x,y),1)
+        y = y.view(length, 1)
+        x = torch.cat((x, y), 1)
         
         x = F.relu(self.linear1(x))
         x = F.relu(self.linear2(x))
@@ -37,7 +37,7 @@ class Cond_Variational_Encoder(nn.Module):
         
         mu =  self.linear7(x)
         sigma = torch.exp(self.linear8(x))
-        z = mu + sigma*self.N.sample(mu.shape)
+        z = mu + sigma * self.N.sample(mu.shape)
         self.kl = (sigma**2 + mu**2 - torch.log(sigma) - 1/2).sum()
         return z
 
@@ -48,17 +48,17 @@ class Cond_Variational_Decoder(nn.Module):
         self.linear1 = nn.Linear(latent_dims + 1, 5) # NB : the input here is latent_dim (=2) + 1 as we add the label
         self.linear2 = nn.Linear(5, 20)
         self.linear3 = nn.Linear(20, 40)
-        self.linear4 = nn.Linear(40,80)
-        self.linear5 = nn.Linear(80,40)
-        self.linear6 = nn.Linear(40,20)
-        self.linear7 = nn.Linear(20,10)       
+        self.linear4 = nn.Linear(40, 80)
+        self.linear5 = nn.Linear(80, 40)
+        self.linear6 = nn.Linear(40, 20)
+        self.linear7 = nn.Linear(20, 10)       
 
     def forward(self, z, y):
         length = y.size(0)
-        y = y.view(length,1)
-        z = torch.cat((z,y),1)
+        y = y.view(length, 1)
+        z = torch.cat((z, y), 1)
         
-        z = F.relu(self.linear1(z)) # relu(x) = max(0,x)
+        z = F.relu(self.linear1(z)) 
         z = F.relu(self.linear2(z))
         z = F.relu(self.linear3(z))
         z = F.relu(self.linear4(z))
@@ -74,8 +74,8 @@ class Cond_Variational_Autoencoder(nn.Module):
         self.decoder = Cond_Variational_Decoder(latent_dims)  
 
     def forward(self, x, y):
-        z = self.encoder(x,y)
-        return self.decoder(z,y)  # return the output 
+        z = self.encoder(x, y)
+        return self.decoder(z, y)  # return the output 
 
         
 
