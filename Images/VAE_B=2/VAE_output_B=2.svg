@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="100" height="400" viewBox="-50 -50 100 400" diplayInline="False">
+<defs>
+</defs>
+<circle cx="-24.674259185791016" cy="-39.3747444152832" r="1" stroke="black" stroke-width="2" fill="none" />
+<circle cx="25.042478561401367" cy="-38.94807052612305" r="1" stroke="black" stroke-width="2" fill="none" />
+<path d="M-27.616,-28.530996322631836 Q0.09514777,18.485551834106445,27.954315,-28.851318359375" stroke-width="2" stroke="black" fill="black" fill-opacity="0" />
+<circle cx="-26.440086364746094" cy="85.20227336883545" r="1" stroke="black" stroke-width="2" fill="none" />
+<circle cx="26.305091857910156" cy="85.00133228302002" r="1" stroke="black" stroke-width="2" fill="none" />
+<path d="M-27.265858,117.94258880615234 Q0.053413182,132.73149871826172,26.815119,117.91192054748535" stroke-width="2" stroke="black" fill="black" fill-opacity="0" />
+<circle cx="-26.74106788635254" cy="185.8334321975708" r="1" stroke="black" stroke-width="2" fill="none" />
+<circle cx="26.88288688659668" cy="185.59509563446045" r="1" stroke="black" stroke-width="2" fill="none" />
+<path d="M-27.870153,225.40164375305176 Q0.033539325,232.47784423828125,27.35753,225.2728500366211" stroke-width="2" stroke="black" fill="black" fill-opacity="0" />
+<circle cx="-24.162132263183594" cy="272.84291648864746" r="1" stroke="black" stroke-width="2" fill="none" />
+<circle cx="24.052669525146484" cy="273.21159744262695" r="1" stroke="black" stroke-width="2" fill="none" />
+<path d="M-24.086517,336.75733184814453 Q0.0424567,303.88687229156494,24.666868,336.8860778808594" stroke-width="2" stroke="black" fill="black" fill-opacity="0" />
+</svg>
