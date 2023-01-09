@@ -23,8 +23,8 @@ def generate_matrix():
     matrix = np.zeros((10))
     
     #eye: 
-    e_y = randint(0,50)
-    e_x = randint(0,50)
+    e_y = randint(0, 50)
+    e_x = randint(0, 50)
     
     #mouth: 
     m1_x = randint(-50, -1)
@@ -45,8 +45,8 @@ def generate_matrix_cond(y):
     matrix = np.zeros((10))
     
     #eye: 
-    e_y = randint(0,50)
-    e_x = randint(0,50)
+    e_y = randint(0, 50)
+    e_x = randint(0, 50)
     
     #mouth: 
     m1_x = randint(-50, -1)
@@ -73,17 +73,17 @@ def draw_smiley(matrix):
     [e1_x, e1_y, e2_x, e2_y, m1_x, m1_y, m2_x, m2_y, m3_x, m3_y] = matrix[:]
     
     ### Canvas: 
-    d = draw.Drawing(100, 100, origin='center', displayInline=False)
+    d = draw.Drawing(100, 100, origin = 'center', displayInline = False)
     
     ### eye1: 
-    d.append(draw.Circle(e1_x, e1_y, 1, stroke='black', stroke_width = 2, fill = 'none'))
+    d.append(draw.Circle(e1_x, e1_y, 1, stroke = 'black', stroke_width = 2, fill = 'none'))
     
     ### eye2: 
-    d.append(draw.Circle(e2_x, e2_y, 1, stroke='black', stroke_width = 2, fill = 'none'))
+    d.append(draw.Circle(e2_x, e2_y, 1, stroke = 'black', stroke_width = 2, fill = 'none'))
     
     ### mouth: 
-    p = draw.Path(stroke_width=2, stroke='black',
-              fill='black', fill_opacity=0)
+    p = draw.Path(stroke_width = 2, stroke = 'black',
+              fill = 'black', fill_opacity = 0)
     p.M(m1_x, m1_y)  # Start path at point (b1_x, b1_y)
     p.Q(m2_x, m2_y, m3_x, m3_y) # 2nd point at (b2_x, b2_y) and final point at (b3_x, b3_y)
     
@@ -95,7 +95,7 @@ def draw_smiley(matrix):
 
 class EarlyStopping:
     """Early stops the training if validation loss doesn't improve after a given patience number (here = 10)."""
-    def __init__(self, patience=10, verbose=False, delta=0, path='checkpoint.pt', trace_func=print):
+    def __init__(self, patience = 10, verbose = False, delta = 0, path = 'checkpoint.pt', trace_func = print):
         """
         Args:
             patience (int): How long to wait after last time validation loss improved.
@@ -150,7 +150,7 @@ def plot_latent_uncond(model, data, num_batches=10):
     for i, x in enumerate(data):  # "i" is the the iteration number (in the loop)
         z = model.encoder(x.float().to(device))
         z = z.to('cpu').detach().numpy()
-        plt.scatter(z[:, 0], z[:, 1]) #, c=y, cmap='tab10')  
+        plt.scatter(z[:, 0], z[:, 1]) #, c = y, cmap = 'tab10')  
         if i > num_batches:
             plt.colorbar()
             break
@@ -172,28 +172,28 @@ def plot_latent_cond(model, data, num_batches=10):
 def draw_column(smileys):
     # function to display all the smileys in a column, without limitation in the number of smileys
     length = len(smileys) # return the number of smiley we want to draw 
-    #Canvas :
-    d = draw.Drawing(100, 100 * length, origin=(-50,-(100*length)+50), diplayInline = False)
+    # Canvas :
+    d = draw.Drawing(100, 100 * length, origin = (-50, -(100 * length) + 50), diplayInline = False)
     
     for i in range(0,length):
         
-        [e1_x, e1_y, e2_x, e2_y, m1_x, m1_y, m2_x, m2_y, m3_x, m3_y] = smileys[i,:]
+        [e1_x, e1_y, e2_x, e2_y, m1_x, m1_y, m2_x, m2_y, m3_x, m3_y] = smileys[i, :]
         
-        e1_y -= i*100
-        e2_y -= i*100
-        m1_y -= i*100
-        m2_y -= i*100
-        m3_y -= i*100
+        e1_y -= i * 100
+        e2_y -= i * 100
+        m1_y -= i * 100
+        m2_y -= i * 100
+        m3_y -= i * 100
         
         ### eye1: 
-        d.append(draw.Circle(e1_x, e1_y, 1, stroke='black', stroke_width = 2, fill = 'none'))
+        d.append(draw.Circle(e1_x, e1_y, 1, stroke = 'black', stroke_width = 2, fill = 'none'))
     
         ### eye2: 
-        d.append(draw.Circle(e2_x, e2_y, 1, stroke='black', stroke_width = 2, fill = 'none'))
+        d.append(draw.Circle(e2_x, e2_y, 1, stroke = 'black', stroke_width = 2, fill = 'none'))
     
         ### mouth: 
-        p = draw.Path(stroke_width=2, stroke='black',
-              fill='black', fill_opacity=0)
+        p = draw.Path(stroke_width = 2, stroke = 'black',
+              fill = 'black', fill_opacity = 0)
         p.M(m1_x, m1_y)  # Start path at point (b1_x, b1_y)
         p.Q(m2_x, m2_y, m3_x, m3_y) # 2nd point at (b2_x, b2_y) and final point at (b3_x, b3_y)
     
@@ -203,47 +203,47 @@ def draw_column(smileys):
 
 # New fonction to displan in array
 
-def draw_grid(smileys, size=10):
-    #Here we consider that smileys is of size 100 to display a canvas of 10x10 smileys but we can change it by 
+def draw_grid(smileys, size = 10):
+    # Here we consider that smileys is of size 100 to display a canvas of 10x10 smileys but we can change it by 
     # modifying the integer "size" (by default size = 10 )
     
-    #Canvas :
-    d = draw.Drawing(100*size, 100*size, origin=(-50,-(100*size)+50), diplayInline = False)
+    # Canvas:
+    d = draw.Drawing(100 * size, 100 * size, origin = (-50, -(100 * size) + 50), diplayInline = False)
     
-    for j in range(0,size):
-        for i in range(0,size):
+    for j in range(0, size):
+        for i in range(0, size):
         
-            [e1_x, e1_y, e2_x, e2_y, m1_x, m1_y, m2_x, m2_y, m3_x, m3_y] = smileys[j*size + i,:]
+            [e1_x, e1_y, e2_x, e2_y, m1_x, m1_y, m2_x, m2_y, m3_x, m3_y] = smileys[j * size + i, :]
 
-            e1_x += j*100
-            e2_x += j*100
-            m1_x += j*100
-            m2_x += j*100
-            m3_x += j*100
+            e1_x += j * 100
+            e2_x += j * 100
+            m1_x += j * 100
+            m2_x += j * 100
+            m3_x += j * 100
                      
-            e1_y -= i*100
-            e2_y -= i*100
-            m1_y -= i*100
-            m2_y -= i*100
-            m3_y -= i*100
+            e1_y -= i * 100
+            e2_y -= i * 100
+            m1_y -= i * 100
+            m2_y -= i * 100
+            m3_y -= i * 100
         
             ### eye1: 
-            d.append(draw.Circle(e1_x, e1_y, 1, stroke='black', stroke_width = 2, fill = 'none'))
+            d.append(draw.Circle(e1_x, e1_y, 1, stroke = 'black', stroke_width = 2, fill = 'none'))
     
             ### eye2: 
-            d.append(draw.Circle(e2_x, e2_y, 1, stroke='black', stroke_width = 2, fill = 'none'))
+            d.append(draw.Circle(e2_x, e2_y, 1, stroke = 'black', stroke_width = 2, fill = 'none'))
     
             ### mouth: 
-            p = draw.Path(stroke_width=2, stroke='black',
-              fill='black', fill_opacity=0)
+            p = draw.Path(stroke_width = 2, stroke = 'black',
+              fill = 'black', fill_opacity = 0)
             p.M(m1_x, m1_y)  
             p.Q(m2_x, m2_y, m3_x, m3_y)
     
             d.append(p)
         
     # separate each smiley with lines : 
-    for i in range(0,size-1):
-        d.append(draw.Lines(-50, -50 - 100*i, 950, -50-100*i, stroke='black')) #e_x1, e_y1, delta_x, delta_y
-        d.append(draw.Lines(50+100*i, 50, 50+100*i, -950, stroke='black'))    #e_x1, e_y1, delta_x, delta_y         
+    for i in range(0, size - 1):
+        d.append(draw.Lines(-50, -50 - 100 * i, 950, -50 - 100 * i, stroke = 'black')) #e_x1, e_y1, delta_x, delta_y
+        d.append(draw.Lines(50 + 100 * i, 50, 50 + 100 * i, -950, stroke = 'black'))    #e_x1, e_y1, delta_x, delta_y         
         
     return d 
