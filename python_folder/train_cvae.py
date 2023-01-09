@@ -9,12 +9,12 @@ import numpy as np
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-def train(cVAE, train_dataloader, val_dataloader, criterion, optimizer, epochs, beta=1.0):
+def train(cVAE, train_dataloader, val_dataloader, criterion, optimizer, epochs, beta = 1.0):
     batch_size = 10
-    train_loss =[]
-    val_loss =[]
+    train_loss = []
+    val_loss = []
     # initialize the early_stopping object
-    early_stopping = EarlyStopping(patience=10, verbose=True)
+    early_stopping = EarlyStopping(patience = 10, verbose = True)
     
     for epoch in range(epochs):
         train_current_loss = 0
@@ -22,13 +22,13 @@ def train(cVAE, train_dataloader, val_dataloader, criterion, optimizer, epochs, 
         
         #### TRAINING ######
         cVAE.train() # prep model for training
-        for x,y in train_dataloader:
+        for x, y in train_dataloader:
             x = x.to(device) 
             y = y.to(device)
 
             optimizer.zero_grad()
-            x_hat = cVAE(x.float(),y.float())
-            loss = criterion(x_hat,x.float()) + beta*cVAE.encoder.kl
+            x_hat = cVAE(x.float(), y.float())
+            loss = criterion(x_hat, x.float()) + beta * cVAE.encoder.kl
             #loss = ((x - x_hat)**2).sum()  + VAE.encoder.kl
             loss.backward()
             optimizer.step()
@@ -36,12 +36,12 @@ def train(cVAE, train_dataloader, val_dataloader, criterion, optimizer, epochs, 
             
         ##### VALIDATION #####
         cVAE.eval()
-        for x,y in val_dataloader:
+        for x, y in val_dataloader:
             x = x.to(device)
             y = y.to(device)
             
-            x_hat = cVAE(x.float(),y.float())
-            val_current_loss += (criterion(x_hat, x.float())+ beta*cVAE.encoder.kl).item()
+            x_hat = cVAE(x.float(), y.float())
+            val_current_loss += (criterion(x_hat, x.float()) + beta * cVAE.encoder.kl).item()
             #val_current_loss = (((x - x_hat)**2).sum()  + VAE.encoder.kl).item()
         
         train_current_loss /= len(train_dataloader)
@@ -49,7 +49,7 @@ def train(cVAE, train_dataloader, val_dataloader, criterion, optimizer, epochs, 
         val_current_loss /= len(val_dataloader)
         val_loss.append(val_current_loss)
         print('Epoch {} of {}, Train Loss: {:.3f}, Val Loss:{:.3f}'.format(
-            epoch+1, epochs, train_current_loss, val_current_loss))
+            epoch + 1, epochs, train_current_loss, val_current_loss))
         
         
         # early_stopping needs the validation loss to check if it has decresed, 
