@@ -11,14 +11,11 @@ import numpy as np
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 
-
-
-
-def train(VAE, train_dataloader, val_dataloader, criterion, optimizer, epochs, beta=1.0):
-    train_loss =[]
-    val_loss =[]
+def train(VAE, train_dataloader, val_dataloader, criterion, optimizer, epochs, beta = 1.0):
+    train_loss = []
+    val_loss = []
     # initialize the early_stopping object
-    early_stopping = EarlyStopping(patience=10, verbose=True)
+    early_stopping = EarlyStopping(patience = 10, verbose = True)
     
     for epoch in range(epochs):
         train_current_loss = 0
@@ -30,7 +27,7 @@ def train(VAE, train_dataloader, val_dataloader, criterion, optimizer, epochs, b
             x = x.to(device) 
             optimizer.zero_grad()
             x_hat = VAE(x.float())
-            loss = criterion(x_hat,x.float()) + beta*VAE.encoder.kl
+            loss = criterion(x_hat, x.float()) + beta * VAE.encoder.kl
             #loss = ((x - x_hat)**2).sum()  + VAE.encoder.kl
             loss.backward()
             optimizer.step()
@@ -41,7 +38,7 @@ def train(VAE, train_dataloader, val_dataloader, criterion, optimizer, epochs, b
         for x in val_dataloader:
             x = x.to(device)
             x_hat = VAE(x.float())
-            val_current_loss += (criterion(x_hat, x.float())+ beta*VAE.encoder.kl).item()
+            val_current_loss += (criterion(x_hat, x.float())+ beta * VAE.encoder.kl).item()
             #val_current_loss = (((x - x_hat)**2).sum()  + VAE.encoder.kl).item()
         
         train_current_loss /= len(train_dataloader)
@@ -49,7 +46,7 @@ def train(VAE, train_dataloader, val_dataloader, criterion, optimizer, epochs, b
         val_current_loss /= len(val_dataloader)
         val_loss.append(val_current_loss)
         print('Epoch {} of {}, Train Loss: {:.3f}, Val Loss:{:.3f}'.format(
-            epoch+1, epochs, train_current_loss, val_current_loss))
+            epoch + 1, epochs, train_current_loss, val_current_loss))
         
         
         # early_stopping needs the validation loss to check if it has decresed, 
