@@ -3,7 +3,7 @@ import numpy as np
 import random
 from random import randint
 import matplotlib.image as mpimg
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt; plt.rcParams['figure.dpi'] = 200
 import drawSvg as draw
 import torch; torch.manual_seed(0)
 import torch.nn as nn
@@ -11,15 +11,14 @@ import torch.nn.functional as F
 import torch.utils
 import torch.distributions
 import torchvision
-import matplotlib.pyplot as plt; plt.rcParams['figure.dpi'] = 200
+import torch.optim as optim # to save a model after training
 
-# To save a trained model ! 
-import torch.optim as optim
+
 
 ## Let's define all the functions needed 
 
 def generate_matrix():
-    # Generate a matrix (corresponding to a smiley) unconditionnally 
+    ''' Generate a matrix (corresponding to a smiley) unconditionnally '''
     matrix = np.zeros((10))
     
     #eye: 
@@ -39,9 +38,9 @@ def generate_matrix():
 
 
 def generate_matrix_cond(y):
-    # Generate a conditional matrix (corresponding to a smiley):
-    # If y = 0 we generate a sad smiley
-    # If y = 1 we generate a happy smiley
+    ''' Generate a conditional matrix (corresponding to a smiley):
+    - If y = 0 we generate a sad smiley
+    - If y = 1 we generate a happy smiley '''
     matrix = np.zeros((10))
     
     #eye: 
@@ -68,20 +67,20 @@ def generate_matrix_cond(y):
 
 
 def draw_smiley(matrix):
-    # Draw a smiley from a matrix 
+    ''' Draw a smiley from a matrix '''
     
     [e1_x, e1_y, e2_x, e2_y, m1_x, m1_y, m2_x, m2_y, m3_x, m3_y] = matrix[:]
     
-    ### Canvas: 
+    # Canvas: 
     d = draw.Drawing(100, 100, origin = 'center', displayInline = False)
     
-    ### eye1: 
+    # eye1: 
     d.append(draw.Circle(e1_x, e1_y, 1, stroke = 'black', stroke_width = 2, fill = 'none'))
     
-    ### eye2: 
+    # eye2: 
     d.append(draw.Circle(e2_x, e2_y, 1, stroke = 'black', stroke_width = 2, fill = 'none'))
     
-    ### mouth: 
+    # mouth: 
     p = draw.Path(stroke_width = 2, stroke = 'black',
               fill = 'black', fill_opacity = 0)
     p.M(m1_x, m1_y)  # Start path at point (b1_x, b1_y)
@@ -94,9 +93,9 @@ def draw_smiley(matrix):
 
 
 class EarlyStopping:
-    """Early stops the training if validation loss doesn't improve after a given patience number (here = 10)."""
+    '''Early stops the training if validation loss doesn't improve after a given patience number (here = 10).'''
     def __init__(self, patience = 10, verbose = False, delta = 0, path = 'checkpoint.pt', trace_func = print):
-        """
+        '''
         Args:
             patience (int): How long to wait after last time validation loss improved.
                             Default: 10
@@ -108,7 +107,7 @@ class EarlyStopping:
                             Default: 'checkpoint.pt'
             trace_func (function): trace print function.
                             Default: print            
-        """
+        '''
         self.patience = patience
         self.verbose = verbose
         self.counter = 0
@@ -136,7 +135,7 @@ class EarlyStopping:
             self.counter = 0
 
     def save_checkpoint(self, val_loss, model):
-        '''Saves model when validation loss decrease.'''
+        '''Saves model when validation loss decreases.'''
         if self.verbose:
             self.trace_func(f'Validation loss decreased ({self.val_loss_min:.6f} --> {val_loss:.6f}).  Saving model ...')
         torch.save(model.state_dict(), self.path)
@@ -147,6 +146,7 @@ device = 'cuda' if torch.cuda.is_available() else 'cpu' # needed for plot_latent
 
 
 def plot_latent_uncond(model, data, num_batches=10):
+    ''' A simple function to visualize the distribution in our 2D latent space '''
     for i, x in enumerate(data):  # "i" is the the iteration number (in the loop)
         z = model.encoder(x.float().to(device))
         z = z.to('cpu').detach().numpy()
@@ -157,7 +157,7 @@ def plot_latent_uncond(model, data, num_batches=10):
 
 
 def plot_latent_cond(model, data, num_batches=10):
-    # A simple function to visualize our 2D latent space
+    ''' A simple function to visualize the distribution in our 2D latent space '''
     for i, (x, y) in enumerate(data):  # "i" is the the iteration number (in the loop)
         z = model.encoder(x.float().to(device),y.float().to(device))
         z = z.to('cpu').detach().numpy()
@@ -167,10 +167,8 @@ def plot_latent_cond(model, data, num_batches=10):
             break
 
 
-
-
 def draw_column(smileys):
-    # function to display all the smileys in a column, without limitation in the number of smileys
+    ''' Function to display all the smileys in a column, without limitation in the number of smileys '''
     length = len(smileys) # return the number of smiley we want to draw 
     # Canvas :
     d = draw.Drawing(100, 100 * length, origin = (-50, -(100 * length) + 50), diplayInline = False)
@@ -185,13 +183,13 @@ def draw_column(smileys):
         m2_y -= i * 100
         m3_y -= i * 100
         
-        ### eye1: 
+        # eye1: 
         d.append(draw.Circle(e1_x, e1_y, 1, stroke = 'black', stroke_width = 2, fill = 'none'))
     
-        ### eye2: 
+        # eye2: 
         d.append(draw.Circle(e2_x, e2_y, 1, stroke = 'black', stroke_width = 2, fill = 'none'))
     
-        ### mouth: 
+        # mouth: 
         p = draw.Path(stroke_width = 2, stroke = 'black',
               fill = 'black', fill_opacity = 0)
         p.M(m1_x, m1_y)  # Start path at point (b1_x, b1_y)
@@ -201,11 +199,11 @@ def draw_column(smileys):
     return d 
 
 
-# New fonction to displan in array
 
 def draw_grid(smileys, size = 10):
-    # Here we consider that smileys is of size 100 to display a canvas of 10x10 smileys but we can change it by 
-    # modifying the integer "size" (by default size = 10 )
+    ''' Function to draw a grid of smileys 
+    NB: Here we consider that smileys is of size 100 to display a canvas of 10x10 smileys but we can change it by 
+    modifying the integer "size" (by default size = 10 ) '''
     
     # Canvas:
     d = draw.Drawing(100 * size, 100 * size, origin = (-50, -(100 * size) + 50), diplayInline = False)
@@ -227,13 +225,13 @@ def draw_grid(smileys, size = 10):
             m2_y -= i * 100
             m3_y -= i * 100
         
-            ### eye1: 
+            # eye1: 
             d.append(draw.Circle(e1_x, e1_y, 1, stroke = 'black', stroke_width = 2, fill = 'none'))
     
-            ### eye2: 
+            # eye2: 
             d.append(draw.Circle(e2_x, e2_y, 1, stroke = 'black', stroke_width = 2, fill = 'none'))
     
-            ### mouth: 
+            # mouth: 
             p = draw.Path(stroke_width = 2, stroke = 'black',
               fill = 'black', fill_opacity = 0)
             p.M(m1_x, m1_y)  
