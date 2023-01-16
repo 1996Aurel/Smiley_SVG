@@ -19,11 +19,15 @@ the eyes. Moreover, the smileys generated were symmetric about the y axis. The s
 
 __Models:__
 
-blabla 
-![image](https://user-images.githubusercontent.com/121833780/212603688-dc758367-cc81-4487-b069-fe7b823d7d45.png)
+The first model developed to generate new smileys was a classical Variational Autoencoder. The encoder neural network was composed of 7 linear layers and took as input a tensor of size 10 to sample a latent code z, a vector of floats of size Nz = 2. As in the VAE, we have enforced a Gaussian IID to z, and
+the strength of the KL-Divergence loss term was controlled using β weight, leading to the well known trade-off between the KL-Divergence Loss and the Reconstruction Loss. Similarly, the decoder neural network was also composed of 7 linear layers. It took as input a latent vector z and output a new vector
+of size 10. The architecture of this neural network is presented below.
+
+![image](https://user-images.githubusercontent.com/121833780/212603790-f769ca3b-4a04-4f14-bcc4-6e3d7d8d0f37.png)
 
 
-blublu
+This model is similar to the first one. On that, it has the same architecture as VAE_smiley, except that we also gave the condition y to the encoder and the decoder. The architecture of our conditional VAE cVAE_smiley is presented below.
+
 ![image](https://user-images.githubusercontent.com/121833780/212603716-d02fb1c7-a8d6-499e-8dad-20d173f56e82.png)
 
 
